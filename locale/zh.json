@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "pwsh 命令守卫",
+    "description": "拦截在 pwsh 里用 Select-String / Get-Content / findstr / rg / cat / node -e 读文件、搜文本的写法，强制改用 read、grep、glob 工具。"
+  }
+}

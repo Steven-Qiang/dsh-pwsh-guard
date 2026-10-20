@@ -1,0 +1,54 @@
+{
+  "name": "dsh-pwsh-guard",
+  "version": "0.1.0",
+  "description": "DSH (DeepSeek Harness) plugin: reject shell text I/O - Select-String, Get-Content, findstr, rg, cat, node -e - in pwsh/bash/ops_bash, and point the agent at read/grep/glob.",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "rules.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node test/check.mjs"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "cordis",
+    "tool-guard",
+    "powershell",
+    "coding-agent"
+  ],
+  "author": "Steven-Qiang <git@qiangmou.ren>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Steven-Qiang/dsh-pwsh-guard.git"
+  },
+  "homepage": "https://github.com/Steven-Qiang/dsh-pwsh-guard#readme",
+  "bugs": {
+    "url": "https://github.com/Steven-Qiang/dsh-pwsh-guard/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "pwsh Guard",
+    "description": "Blocks shell commands that read or search files (Select-String, Get-Content, findstr, rg, cat, node -e reading fs) and tells the agent to use the read, grep and glob tools instead."
+  }
+}

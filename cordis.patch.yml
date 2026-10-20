@@ -1,0 +1,11 @@
+- insert:
+    - id: pwsh-guard
+      name: 'dsh-pwsh-guard'
+      config:
+        enabled: true
+        tools:
+          - pwsh
+          - bash
+          - ops_bash
+        disabledGroups: []
+        allowPatterns: []
