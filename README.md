@@ -38,6 +38,7 @@ All fields are optional.
   name: 'dsh-pwsh-guard'
   config:
     enabled: true
+    language: auto          # zh | en | auto
     tools: [pwsh, bash, ops_bash]
     disabledGroups: []      # textSearch | textRead | runtimeBypass | sleep | stderrMerge
     allowPatterns: []       # regexes matched against the raw command; a match allows the call

@@ -1,10 +1,21 @@
-import { commandFrom, inspectCommand, normalizeSettings } from './rules.js'
+import { commandFrom, inspectCommand, normalizeSettings, type PluginConfig } from './rules.js'
 
 export const name = 'pwsh-guard'
 
 export const inject = ['tools']
 
-export function apply(ctx, config) {
+interface GuardExecution {
+  name?: unknown
+  arguments?: unknown
+}
+
+interface GuardContext {
+  tools: {
+    guard(guard: (execution: Readonly<GuardExecution>) => string | undefined): unknown
+  }
+}
+
+export function apply(ctx: GuardContext, config?: PluginConfig): void {
   const settings = normalizeSettings(config)
 
   ctx.tools.guard((execution) => {

@@ -1,4 +1,4 @@
-import { inspectCommand, normalizeSettings, stripQuoted } from '../rules.js'
+import { inspectCommand, normalizeSettings, stripQuoted } from '../dist/rules.js'
 
 /**
  * 引擎自测：直接跑规则，不依赖 DSH 运行时。
@@ -97,6 +97,18 @@ const assertions = [
   ['引号抹除不改变长度', () => {
     const raw = 'a "b c" d'
     return stripQuoted(raw).length === raw.length
+  }],
+  ['language zh 输出中文', () => {
+    const message = inspectCommand('Get-Content a.txt', normalizeSettings({ language: 'zh' })) ?? ''
+    return message.startsWith('[pwsh-guard] 已拦截：')
+  }],
+  ['language en 输出英文', () => {
+    const message = inspectCommand('Get-Content a.txt', normalizeSettings({ language: 'en' })) ?? ''
+    return message.startsWith('[pwsh-guard] Blocked:')
+  }],
+  ['language auto 落到 zh 或 en', () => {
+    const { language } = normalizeSettings({})
+    return language === 'zh' || language === 'en'
   }],
 ]
 
