@@ -4,11 +4,14 @@
 [![release](https://github.com/Steven-Qiang/dsh-pwsh-guard/actions/workflows/release.yml/badge.svg)](https://github.com/Steven-Qiang/dsh-pwsh-guard/actions/workflows/release.yml)
 [![license](https://img.shields.io/npm/l/dsh-pwsh-guard.svg)](LICENSE)
 
+**English** | [简体中文](README.zh-CN.md)
+
 A DeepSeek Harness plugin that enforces one rule: **read files with `read`, search with `grep`,
 locate files with `glob`** — not with shell text commands.
 
-It registers a `ctx.tools.guard` over `pwsh`, `bash` and `ops_bash`. A call whose command line does
-file text I/O is rejected before execution, and the rejection reason names the tool to use instead.
+It registers a `ctx.tools.guard` over `pwsh`, `bash` and `ops_bash`. A call whose command line
+performs file text I/O is rejected before execution, and the rejection reason names the tool to use
+instead. Rejection messages follow the host locale (English or Chinese).
 
 ## Rules
 
@@ -45,12 +48,14 @@ All fields are optional.
     rules: []               # extra rules, evaluated before the built-ins
 ```
 
+`language: auto` follows `DSH_LOCALE`, then the host locale, then `LANG` / `LC_ALL`.
+
 ```yaml
     rules:
       - id: no-force-push
         pattern: 'git\s+push\s+--force'
-        title: '拒绝强推'
-        hint: '改用 --force-with-lease'
+        title: 'Force push is blocked'
+        hint: 'Use --force-with-lease instead'
 ```
 
 ## Installation
@@ -103,7 +108,7 @@ Check for `node_modules/dsh-pwsh-guard/index.js` and the `id: pwsh-guard` row be
 npm test
 ```
 
-36 command fixtures and 8 configuration assertions.
+Builds with tsdown, then runs 36 command fixtures and 11 configuration assertions.
 
 ## Release
 
