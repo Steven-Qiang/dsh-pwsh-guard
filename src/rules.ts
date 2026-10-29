@@ -350,8 +350,8 @@ const BUILTIN_RULES: Rule[] = [
     group: 'sleep',
     title: { en: '`Start-Sleep` waits inside the shell', zh: '命令里出现 `Start-Sleep`（在 shell 里空等）' },
     hint: {
-      en: 'Do not sleep: use job_output with wait to wait for a result, and schedule_create for timers.',
-      zh: '不要空等：要等结果用 job_output 的 wait，要定时用 schedule_create。',
+      en: 'Do not sleep. For a service, probe its port or endpoint until it answers; for a background job, read its output again later. Use schedule_create for timers.',
+      zh: '不要空等。起服务就探测端口或接口直到就绪；后台任务过一会儿再读一次 job_output。要定时用 schedule_create。',
     },
     test: hitBy(anywhere('Start-Sleep')),
   },
@@ -360,8 +360,8 @@ const BUILTIN_RULES: Rule[] = [
     group: 'sleep',
     title: { en: '`sleep` (alias of Start-Sleep)', zh: '命令里出现 `sleep`（Start-Sleep 的别名）' },
     hint: {
-      en: 'Do not sleep: use job_output with wait to wait for a result, and schedule_create for timers.',
-      zh: '不要空等：要等结果用 job_output 的 wait，要定时用 schedule_create。',
+      en: 'Do not sleep. For a service, probe its port or endpoint until it answers; for a background job, read its output again later. Use schedule_create for timers.',
+      zh: '不要空等。起服务就探测端口或接口直到就绪；后台任务过一会儿再读一次 job_output。要定时用 schedule_create。',
     },
     test: hitBy(atCommandHead('sleep')),
   },

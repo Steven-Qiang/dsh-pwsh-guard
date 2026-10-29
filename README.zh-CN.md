@@ -21,7 +21,7 @@ DeepSeek Harness 插件，把一条约定变成硬约束：**读文件用 `read`
 | `read.Get-Content`、`read.gc`、`read.cat`、`read.type` | textRead | `Get-Content` 及其别名 | `read` |
 | `read.more`、`read.head`、`read.tail` | textRead | `more`、`head`、`tail` | `read` |
 | `bypass.node-eval`、`bypass.python-c`、`bypass.php-r`、`bypass.dotnet-io` | runtimeBypass | 脚本里读文件的 `node -e`、`python -c`、`php -r`、`[IO.File]::ReadAllText` | `read`、`grep` |
-| `wait.Start-Sleep`、`wait.sleep` | sleep | `Start-Sleep`、`sleep` | `job_output` 的 wait、`schedule_create` |
+| `wait.Start-Sleep`、`wait.sleep` | sleep | `Start-Sleep`、`sleep` | 探测端口、过一会儿再读任务、`schedule_create` |
 | `pipeline.stderr-merge` | stderrMerge | `2>&1` 之后又接管道 | `$LASTEXITCODE`、`2>err.txt` |
 | `job.wait` | jobWait | `job_output` 传 `wait: true` | 探测端口（`Test-NetConnection`、`curl`），或过一会儿再读任务 |
 

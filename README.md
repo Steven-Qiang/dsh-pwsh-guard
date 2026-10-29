@@ -22,7 +22,7 @@ instead. Rejection messages follow the host locale (English or Chinese).
 | `read.Get-Content`, `read.gc`, `read.cat`, `read.type` | textRead | `Get-Content` and its aliases | `read` |
 | `read.more`, `read.head`, `read.tail` | textRead | `more`, `head`, `tail` | `read` |
 | `bypass.node-eval`, `bypass.python-c`, `bypass.php-r`, `bypass.dotnet-io` | runtimeBypass | `node -e`, `python -c`, `php -r`, `[IO.File]::ReadAllText` that read files | `read`, `grep` |
-| `wait.Start-Sleep`, `wait.sleep` | sleep | `Start-Sleep`, `sleep` | `job_output` wait, `schedule_create` |
+| `wait.Start-Sleep`, `wait.sleep` | sleep | `Start-Sleep`, `sleep` | probe the port, read the job again later, `schedule_create` |
 | `pipeline.stderr-merge` | stderrMerge | `2>&1` followed by a pipe | `$LASTEXITCODE`, `2>err.txt` |
 | `job.wait` | jobWait | `job_output` called with `wait: true` | probe the port (`Test-NetConnection`, `curl`), or read the job again later |
 
