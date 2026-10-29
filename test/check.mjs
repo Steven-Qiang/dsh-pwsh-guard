@@ -1,4 +1,4 @@
-import { inspectCommand, normalizeSettings, stripQuoted } from '../dist/rules.js'
+import { inspectCommand, inspectToolCall, normalizeSettings, stripQuoted } from '../dist/rules.js'
 
 /**
  * 引擎自测：直接跑规则，不依赖 DSH 运行时。
@@ -109,6 +109,23 @@ const assertions = [
   ['language auto 落到 zh 或 en', () => {
     const { language } = normalizeSettings({})
     return language === 'zh' || language === 'en'
+  }],
+  ['job_output 传 wait:true 被拦', () => {
+    const message = inspectToolCall('job_output', { job_id: 'x', wait: true, timeout_ms: 20000 }, defaults)
+    return typeof message === 'string' && message.includes('wait')
+  }],
+  ['job_output 不传 wait 放行', () => {
+    return inspectToolCall('job_output', { job_id: 'x' }, defaults) === undefined
+  }],
+  ['job_output wait:false 放行', () => {
+    return inspectToolCall('job_output', { job_id: 'x', wait: false }, defaults) === undefined
+  }],
+  ['别的工具传 wait 不受影响', () => {
+    return inspectToolCall('bcdp_wait_for_selector', { wait: true }, defaults) === undefined
+  }],
+  ['jobWait 组可整组关闭', () => {
+    const settings = normalizeSettings({ disabledGroups: ['jobWait'] })
+    return inspectToolCall('job_output', { job_id: 'x', wait: true }, settings) === undefined
   }],
 ]
 

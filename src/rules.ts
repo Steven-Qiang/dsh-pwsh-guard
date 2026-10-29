@@ -23,6 +23,16 @@ export interface Rule {
   test: (command: string) => RuleHit | null
 }
 
+/** A rule over a tool call's arguments, for tools that carry no command line. */
+export interface ToolRule {
+  id: string
+  group: string
+  tools: string[]
+  title: RuleText
+  hint: RuleText
+  when: (args: Record<string, unknown>) => boolean
+}
+
 export interface Settings {
   enabled: boolean
   language: Language
@@ -448,15 +458,35 @@ export function commandFrom(toolName: string, args: unknown): string | undefined
 
 const SNIPPET_LIMIT = 80
 
+// Blocking on a job hides a long-running server behind a call that never returns.
+const BUILTIN_TOOL_RULES: ToolRule[] = [
+  {
+    id: 'job.wait',
+    group: 'jobWait',
+    tools: ['job_output'],
+    title: {
+      en: '`job_output` is called with `wait: true`',
+      zh: '`job_output` 传了 `wait: true`（阻塞等待后台任务）',
+    },
+    hint: {
+      en: 'Do not block on a job. For a dev server, probe its port instead (`Test-NetConnection -Port`, `curl`); for any other job, read `job_output` again later without wait.',
+      zh: '不要阻塞等任务。起 vite dev 这类常驻服务时，改为探测端口是否就绪（`Test-NetConnection -Port` 或 `curl`）；其它后台任务过一会儿再读一次 `job_output`，不要传 wait。',
+    },
+    when: (args) => args.wait === true,
+  },
+]
+
 const MESSAGE = {
   zh: {
     headline: (title: string) => `[pwsh-guard] 已拦截：${title}`,
     matched: (snippet: string) => `命中片段：${snippet}`,
+    tool: '工具',
     note: (id: string) => `（规则 ${id}；确需放行请让用户调整 pwsh-guard 的 config）`,
   },
   en: {
     headline: (title: string) => `[pwsh-guard] Blocked: ${title}`,
     matched: (snippet: string) => `Matched: ${snippet}`,
+    tool: 'Tool',
     note: (id: string) =>
       `(rule ${id}; ask the user to change the pwsh-guard config if this must be allowed)`,
   },
@@ -490,6 +520,40 @@ export function inspectCommand(command: unknown, settings: Settings): string | u
       hit = null
     }
     if (hit) return formatDenial(rule, hit, command, settings.language)
+  }
+  return undefined
+}
+
+function formatToolDenial(rule: ToolRule, toolName: string, language: Language): string {
+  const text = MESSAGE[language]
+  return [
+    text.headline(pick(rule.title, language)),
+    `${text.tool}: ${toolName}`,
+    pick(rule.hint, language),
+    text.note(rule.id),
+  ].join('\n')
+}
+
+/** Rules that judge a tool call by its arguments, independent of any shell command. */
+export function inspectToolCall(
+  toolName: unknown,
+  args: unknown,
+  settings: Settings,
+): string | undefined {
+  if (typeof toolName !== 'string' || toolName === '') return undefined
+  if (!args || typeof args !== 'object' || Array.isArray(args)) return undefined
+  const record = args as Record<string, unknown>
+
+  for (const rule of BUILTIN_TOOL_RULES) {
+    if (settings.disabledGroups.has(rule.group)) continue
+    if (!rule.tools.includes(toolName)) continue
+    let matched: boolean
+    try {
+      matched = rule.when(record)
+    } catch {
+      matched = false
+    }
+    if (matched) return formatToolDenial(rule, toolName, settings.language)
   }
   return undefined
 }

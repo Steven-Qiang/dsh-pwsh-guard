@@ -23,6 +23,7 @@ DeepSeek Harness 插件，把一条约定变成硬约束：**读文件用 `read`
 | `bypass.node-eval`、`bypass.python-c`、`bypass.php-r`、`bypass.dotnet-io` | runtimeBypass | 脚本里读文件的 `node -e`、`python -c`、`php -r`、`[IO.File]::ReadAllText` | `read`、`grep` |
 | `wait.Start-Sleep`、`wait.sleep` | sleep | `Start-Sleep`、`sleep` | `job_output` 的 wait、`schedule_create` |
 | `pipeline.stderr-merge` | stderrMerge | `2>&1` 之后又接管道 | `$LASTEXITCODE`、`2>err.txt` |
+| `job.wait` | jobWait | `job_output` 传 `wait: true` | 探测端口（`Test-NetConnection`、`curl`），或过一会儿再读任务 |
 
 两条判定规则用来压低误报：
 
@@ -42,7 +43,7 @@ DeepSeek Harness 插件，把一条约定变成硬约束：**读文件用 `read`
     enabled: true
     language: auto          # zh | en | auto
     tools: [pwsh, bash, ops_bash]
-    disabledGroups: []      # textSearch | textRead | runtimeBypass | sleep | stderrMerge
+    disabledGroups: []      # textSearch | textRead | runtimeBypass | sleep | stderrMerge | jobWait
     allowPatterns: []       # 正则，命中则整体放行
     rules: []               # 追加自定义规则，排在内置规则之前
 ```

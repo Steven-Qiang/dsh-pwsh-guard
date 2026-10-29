@@ -1,4 +1,10 @@
-import { commandFrom, inspectCommand, normalizeSettings, type PluginConfig } from './rules.js'
+import {
+  commandFrom,
+  inspectCommand,
+  inspectToolCall,
+  normalizeSettings,
+  type PluginConfig,
+} from './rules.js'
 
 export const name = 'pwsh-guard'
 
@@ -22,6 +28,10 @@ export function apply(ctx: GuardContext, config?: PluginConfig): void {
     if (!settings.enabled) return undefined
     try {
       if (!execution || typeof execution.name !== 'string') return undefined
+
+      const toolDenial = inspectToolCall(execution.name, execution.arguments, settings)
+      if (toolDenial) return toolDenial
+
       if (!settings.tools.has(execution.name)) return undefined
       return inspectCommand(commandFrom(execution.name, execution.arguments), settings)
     } catch {
